@@ -7,7 +7,7 @@ public class NewSearchingTravel {
     public static final String COUNTRY_VIETNAM = "vietnam";
     public static final String COUNTRY_PHILLIPHINE = "philliphine";
     public static final String COUNTRY_TAILAND = "tailand";
-    //여행 상품 저장
+    //여행 상품 저장R
     private List<TravelInfo> travelInfoList = new ArrayList<TravelInfo>();
 
     public NewSearchingTravel() {
