@@ -56,4 +56,5 @@ public class TravelInfo {
                                           .append(days).append("일");
         return builder.toString();
     }
+
 }
