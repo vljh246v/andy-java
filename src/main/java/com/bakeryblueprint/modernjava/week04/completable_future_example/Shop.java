@@ -39,16 +39,7 @@ public class Shop {
    * @apiNote getPrice 메서드의 비동기 형태
    */
   public Future<Double> getPriceAsync(final String product) {
-    final CompletableFuture<Double> futurePrice = new CompletableFuture<>();
-    new Thread(() -> {
-      try {
-        final double price = this.calculatePrice(product);
-        futurePrice.complete(price);
-      } catch (final Exception e) {
-        futurePrice.completeExceptionally(e);
-      }
-    }).start();
-    return futurePrice;
+    return CompletableFuture.supplyAsync(() -> this.calculatePrice(product));
   }
 
   /**
