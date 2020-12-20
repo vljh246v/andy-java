@@ -41,8 +41,12 @@ public class Shop {
   public Future<Double> getPriceAsync(final String product) {
     final CompletableFuture<Double> futurePrice = new CompletableFuture<>();
     new Thread(() -> {
-      final double price = this.calculatePrice(product);
-      futurePrice.complete(price);
+      try {
+        final double price = this.calculatePrice(product);
+        futurePrice.complete(price);
+      } catch (final Exception e) {
+        futurePrice.completeExceptionally(e);
+      }
     }).start();
     return futurePrice;
   }
@@ -54,6 +58,9 @@ public class Shop {
    */
   private double calculatePrice(final String product) {
     Shop.delay();
+//    if (new Random().nextBoolean()) {
+//      throw new RuntimeException("product not available");
+//    }
     return new Random().nextDouble() * product.charAt(0) + product.charAt(1);
   }
 
