@@ -239,4 +239,126 @@ if( 하위 작업으로 분리할 수 있는지 판단) {
 ### 5.2. CompletableFuture 클래스
 * CompletableFuture 클래스는 Future 인터페이스의 구체적인 구현체
 * 다양한 비즈니스 로직을 구현하기 위해서는 Future 인터페이스의 완료여부를 판단하고 결과값을 받아오는 것만으로는 충부하지 않음
+* 비동기 연산을 파이프라인으로 연결 가능하다.  [예제](../../src/main/java/com/bakeryblueprint/modernjava/week04/CompletableFutureExample.java)
+* 많이 사용되는 메서드
+  * runAsync : Runnable 인터페이스 구현체를 실행시킨다. 외부에 값을 리턴하지는 않는다.
+  * supplyAsync : Supplier 인터페이스 구현체를 실행시킨다. 리턴 객체가 있어 결과를 확인할 수 있다.
+  * 두 메서드는 결과를 확인할 수 있냐 없냐 차이다.
+  * 두 메서드 모두 CompletableFuture 를 반환한다.
+```java
+final CompletableFuture<Void> voidFuture = CompletableFuture
+        .runAsync(() -> System.out.println("Runnable1~"))
+        .thenRun(() -> System.out.println("Runnable2~"));
+final CompletableFuture<Integer> IntegerFuture = CompletableFuture
+        .supplyAsync(() -> {
+          System.out.println("Supplier~");
+          return 1;
+        })
+        .thenApply(integer -> integer + integer);
 
+          System.out.println(IntegerFuture.get());
+```
+* thenRun, thenApply 등을 통해 연결 작업을 만들 수 있다.
+* 동기 작업을 비동기로 만드는 (호출하는 로직을 변경) [예제 P209~210](../../src/main/java/com/bakeryblueprint/modernjava/week04/InsuranceCalculator.java)
+* 동기 작업을 비동기로 만드는 (내부 구조를 변경해서 비동기로 변경) [예제 P211](../../src/main/java/com/bakeryblueprint/modernjava/week04/InsuranceCalculator.java)
+
+## 6. 스트림 병렬 처리
+### 6.1. 스트림 병렬 처리 이해
+
+* 스트림 API 에서는 parallelStream 메서드 이용만으로 손쉽게 병렬 처리 가능
+* 순차 처리로 만들어진 스트림도 손쉽게 병렬처리 가능 [예제](../../src/main/java/com/bakeryblueprint/modernjava/week04/ChangeParallelExample.java)
+* 실제로 만들어 지는 스레드는 어떤 스레드일까? [예제](../../src/main/java/com/bakeryblueprint/modernjava/week04/InsideParallelStream.java)
+* 처리를 할때 순서가 중요하다면 병렬 처리를 해서는 안도니다.
+* PC나 서버의 코어수에 따라 스레드가 생성 된다.
+* main 스레드가 존재하고 main 스레드가 ForkJoinPool 스레드를 생성한다.
+  * 스레드 생성은 ExecutorService 관리
+  * ForkJoinPool은 ExecutorService 인터페이스를 구현한 클래스
+  * 코어 수 기반의 스레드 생성은 스트림에서 제어하는 것이 아니라 ForkJoinPool 에 영향은 받는다.
+
+### 6.2. 스레드 개수 제어
+
+* PC 혹은 서버의 코어수 만큼 스레드가 생성이 되고 , 이것이 전체 CPU를 선점하는 현상이 일어남
+* 다른 어플리케이션에 영향을 미치게 됨 -> 스레드 개수 제한이 꼭! 필요함
+  * ForkJoinPool의 기본 스레드 값을 변경한다. [예제](../../src/main/java/com/bakeryblueprint/modernjava/week04/InsideParallelStream2.java)
+    * 설정한 스레드 값(ForkJoinPool) + main 스레드 만큼의 스레드 수가 설정
+    * 자바 가상 머신 전체에 영향을 미침, 가상머신 종료까지 유효한 수치 -> 주의!
+  * ForkJoinPool 말고 다른 스레드 풀을 사용한다. [예제](../../src/main/java/com/bakeryblueprint/modernjava/week04/InsideParallelStream3.java)
+    * 사용자가 만들어둔 Pool 안에서 동작이 수행
+    * 여기서는 설정한 만큼만 스레드가 생성됨
+  
+### 6.3. parallel 과 sequential
+* 순차 처리 <-> 병렬 처리를 중간에서 손쉽게 변경 가능
+```java
+list.stream().limit(100).parallel().reduce(Integer::sum);
+```
+
+## 7. 분할 반복 Spliterator
+* Iterator 방식은 기본적으로 순차방식이기 때문에 병렬 처리를 위해서는 사용자가 직접 데이터를 분할하고 할당하는 작업이 필요함
+* 8 에서는 편리하게 병렬 처리할 수 있도록 Spliterator 인터페이스를 제공
+```java
+public interface Spliterator<T> {
+  boolean tryAdvance(Consumer<? super T> action);
+  Spliterator<T> trySplit();
+  long estimateSize();
+  int characteristicscharacteristics();
+}
+```
+* tryAdvance : 요소를 하나씩 순차적으로 소비하면서 탐색해야 할 요소가 남아있으면 참을 반환한다.(일반적인 iterator 동작과 동일)
+* trySplit : Spliterator 일부 요소를 분할해서 두 번째 Spliterator 를 생성하는 메서드
+* estimateSize : 탐색해야 할 요소 수 정보를 제공함
+* [characteristics](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Collector.Characteristics.html) : 특정 집합을 포함하는 int를 반환, 해당 내용을 통해 최적화와 제어 방법을 설정
+  * ORDERED : 리스트처럼 요소해 정해진 순서가 있으므로 Spliterator를 분할할 때 이 순서에 유의해야 한다.
+  * DISTINCT : x, y 두 요소를 방문했을 때 x.equals(y) 는 항상 false를 반환한다.
+  * SORTED : 탐색된 요소는 미리 정의된 정렬 순서를 따른다.
+  * SIZE : 크기가 알려진 소스(예를 들면 Set)로 Spliterator를 생성했으므로 estimateSize()는 정확한 값을 반환한다.
+  * NONNULL 탐색하는 모든 요소는 null이 아니다.
+  * IMMUTABLE : 이 Spliterator는 불변이다. 즉, 요소를 탐색하는 동안 요소를 추가하거나, 삭제하거나, 고칠 수 없다.
+  * CONCURRENT : 동기화 없이 Spliterator의 소스를 여러 스레드에서 동시에 고칠 수 있다.
+  * SUBSIZED : 이 Spliterator 그리고 분할되는 모든 Spliterator 는 SIZE 특성을 갖는다.
+  * 예시
+    ```java
+    // Set 의  Spliterator 는 HashSet SIZED, DISTINCT 특성을 가짐
+    public int characteristics() {
+      return (fence < 0 || est == map.size ? Spliterator.SIZED : 0) |
+          Spliterator.DISTINCT;
+    }
+    ```
+    
+* Spliterator 사용 예시
+  * [Iterator 사용 예시](../../src/main/java/com/bakeryblueprint/modernjava/week04/IteratorExample.java)
+  * [Spliterator 사용 예시](../../src/main/java/com/bakeryblueprint/modernjava/week04/SpliteratorExample.java)
+
+* 순서가 중요한 작업에서는 사용 X
+* Spliterator 역시 포크/조인 프레임워크와 결합해야 프로그래밍이 가능
+
+## 8. 컨터런트 컬렉션
+* Vector, HashTable 은 멀티 스레드 환경에서 사용할 수 있도록 synchronized 키워드를 남발
+* 성능 저하로 연결
+* 동기화 키워드를 제거한 List, HashMap 제공
+* 병렬 프로그래밍을 위한 특화된 컬렉션을 제공
+
+### 8.1. 컨터런트 컬렉션 
+* BlockingQueue : 클라이언트로부터 요청 받은 데이터를 순차적으로 처리하기 위해 많이 사용
+* ConcurrentMap : HashMap 에 대응
+* ConcurrentNavigableMap : TreeMap에 대응
+
+## 9 기타 기능
+### 9.1. 원자적 변수
+* 특정 변수가 병렬 처리에서 원자성을 가지기 어려움
+* synchronized 를 사용 하는 방법이 있음
+* 그러나 이런 기능 말고도 원자성을 유지하게 해주는 클래스가 있음
+* boolean, int, long, int 배열, long 배열 등의 값이 원자성을 유지하도록 제공
+* 객체용도 있음 (제네릭하게 설계)
+* 누적 / 추가를 위한 클래스 제공
+```java
+public class AtomicExample {
+    private AtomicBoolean locked = new AtomicBoolean(false);
+    // get(), set(), getAndSet(), compareAndSet() 등을 제공
+    public boolean lock() {
+    	return locked.compareAndSet(false, true);
+    }
+}
+```
+### 9.2. 컨커런트 랜덤 숫자
+* Random 클래스는 많이 사용하고 있지만 성능이 좋지 않음
+* ThreadLocalRandom 클래스를 이용하면 더 좋은 성능 확보가 가능함
