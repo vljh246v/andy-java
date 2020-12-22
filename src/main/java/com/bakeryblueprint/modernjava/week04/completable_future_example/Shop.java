@@ -3,7 +3,9 @@ package com.bakeryblueprint.modernjava.week04.completable_future_example;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
+import lombok.Data;
 
+@Data
 public class Shop {
 
   private final String shopName;
