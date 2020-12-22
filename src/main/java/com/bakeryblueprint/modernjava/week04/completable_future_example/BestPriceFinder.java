@@ -13,7 +13,7 @@ public class BestPriceFinder {
       new Shop("ShopEasy"));
 
   public List<String> findPrices(final String product) {
-    return this.shops.stream()
+    return this.shops.parallelStream()
         .map(it -> {
           return it.getShopName() + " price is " + it.getPrice(product);
         }).collect(Collectors.toList());
