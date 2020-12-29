@@ -32,9 +32,7 @@ public class Q3 {
     final ExecutorService service = Executors.newFixedThreadPool(5);
     final List<Future<String>> futureList = new ArrayList<>();
     for (int i = 0; i < 5; i++) {
-      final Future<String> submit = service.submit(() -> {
-        return q3.returnThreadName();
-      });
+      final Future<String> submit = service.submit(q3::returnThreadName);
       futureList.add(submit);
     }
 
