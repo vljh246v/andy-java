@@ -10,19 +10,10 @@ public class Q1 {
   public static void main(final String[] args) {
 
     final Q1 q1 = new Q1();
-    q1.printMyNameByExecutorService(new MyTask("재현"));
-    q1.printMyNameByExecutorService(new MyTask("재현"));
-    q1.printMyNameByExecutorService(new MyTask("재현"));
-    q1.printMyNameByExecutorService(new MyTask("재현"));
-    q1.printMyNameByExecutorService(new MyTask("재현"));
+    q1.printMyNameByExecutorService(new MyTask("재현 printMyNameByExecutorService"));
 
-    q1.printMyNameByScheduledExecutorService(new MyTask("재현"));
-    q1.printMyNameByScheduledExecutorService(new MyTask("재현"));
-    q1.printMyNameByScheduledExecutorService(new MyTask("재현"));
-    q1.printMyNameByScheduledExecutorService(new MyTask("재현"));
-    q1.printMyNameByScheduledExecutorService(new MyTask("재현"));
-
-
+    q1.printMyNameByScheduledExecutorService(
+        new MyTask("재현 printMyNameByScheduledExecutorService"));
   }
 
   public void printMyNameByExecutorService(final MyTask task) {
@@ -44,7 +35,6 @@ public class Q1 {
 
     exeService.schedule(() -> {
       try {
-        TimeUnit.SECONDS.sleep(2);
         task.task();
       } catch (final Exception e) {
         e.printStackTrace();
