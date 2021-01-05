@@ -9,6 +9,12 @@
 - 파일의 크기가 작고 데이터를 쓰는 빈도가 빈번하지 않을 경우 사용
 - 일반적인 경우 사용하면 힙메모리 부족.
 - 별도의 스트림이나 채널을 생성하지 않고 Files 클래스에서 메서드만 호출하면 기능을 구현할 수 있기 때문에 편리함.
+
+- readAllByte(path) : 파일의 모든 데이터를 바이트로 읽어서 반환, 파일 전체 데이터를 한번에 처리할 때 사용
+- readAllLines(path, charset) : 파일의 모든 라인을 한번에 읽어서 리턴, 하나의 라인을 하나의 String 객체에 담고 List<String>을 리턴. 두번째 파라미터는 인코딩할 캐릭터셋 지정 
+- write(path, byte[], OpenOption...) : 전달받은 바이트 배열을 파일에 저장
+- write(path, Iterable<? extends CharSequence>, OpenOption) : List<String> 객체를 파라미터로 전달하면 String을 하나의 라인으로 조합해서 파일에 저장. 
+
 ```java
 package insightbook.newjava.ch07;
 
@@ -60,10 +66,6 @@ public class SmallFileIO {
 	}
 }
 ```
-- readAllByte(path) : 파일의 모든 데이터를 바이트로 읽어서 반환, 파일 전체 데이터를 한번에 처리할 때 사용
-- readAllLines(path, charset) : 파일의 모든 라인을 한번에 읽어서 리턴, 하나의 라인을 하나의 String 객체에 담고 List<String>을 리턴. 두번째 파라미터는 인코딩할 캐릭터셋 지정 
-- write(path, byte[], OpenOption...) : 전달받은 바이트 배열을 파일에 저장
-- write(path, Iterable<? extends CharSequence>, OpenOption) : List<String> 객체를 파라미터로 전달하면 String을 하나의 라인으로 조합해서 파일에 저장. 
 
 ### 7.6.3 버퍼 입출력 이용
 - 많은 데이터를 읽고 쓰는 것은 에러를 유발할 수 있어 권장하지 않으며, 조금씩 읽고쓰는 것은 잦은 I/O 발생으로 성능이 떨어진다 
