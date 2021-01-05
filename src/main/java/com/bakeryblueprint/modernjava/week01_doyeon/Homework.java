@@ -14,16 +14,10 @@ public class Homework {
 
         List<Apple> list = new ArrayList<Apple>();
 
-        Apple apple = new Apple();
-        apple.setColor("red");
-        apple.setOwner("도연");
-        apple.setWeight(100);
+        Apple apple = new Apple("도연", "red", 100);
         list.add(apple);
 
-        Apple apple2 = new Apple();
-        apple2.setColor("black");
-        apple2.setOwner("류도연");
-        apple2.setWeight(1001);
+        Apple apple2 = new Apple("류도연", "black", 1001);
         list.add(apple2);
 
         //익명함수
