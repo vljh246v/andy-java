@@ -5,7 +5,7 @@
 - <img src = "https://user-images.githubusercontent.com/38370976/103625653-9e957280-4f7e-11eb-8f68-fc96978851ce.png" width="600px">
 - <img src = "https://user-images.githubusercontent.com/38370976/103455813-a7463880-4d33-11eb-9b45-d4d10624abdd.png" width="600px">
 
-### 7.6.2 File 클래스 이용
+### 7.6.2 Files 클래스 이용
 - 파일의 크기가 작고 데이터를 쓰는 빈도가 빈번하지 않을 경우 사용
 - 일반적인 경우 사용하면 힙메모리 부족.
 - 별도의 스트림이나 채널을 생성하지 않고 Files 클래스에서 메서드만 호출하면 기능을 구현할 수 있기 때문에 편리함.
@@ -24,12 +24,13 @@ import java.nio.file.StandardOpenOption;
  * 주의해서 사용해야 한다.
  */
 public class SmallFileIO {
-
+    // 파일의 전체 내용을 바이트 배열로 읽어드림. 
 	public static byte[] readAllFromFile(Path filePath) throws IOException {
 		byte[] fileArray = Files.readAllBytes(filePath);
 		return fileArray;
 	}
 	
+    //파일 전체 데이터를 한번에 저장.
 	public static void writeAllToFile(Path filePath, byte[] fileArray) throws IOException {
 		Files.write(filePath, fileArray, 
 				StandardOpenOption.CREATE, StandardOpenOption.WRITE);
@@ -67,6 +68,7 @@ public class SmallFileIO {
 ### 7.6.3 버퍼 입출력 이용
 - 많은 데이터를 읽고 쓰는 것은 에러를 유발할 수 있어 권장하지 않으며, 조금씩 읽고쓰는 것은 잦은 I/O 발생으로 성능이 떨어진다 
 - 속도를 높이기 위해 버퍼를 사용. 일정 크기의 데이터를 버퍼링하고, 버퍼링된 데이터를 한번에 읽고 쓰는 방식.
+- 기존 IO File 객체를 이용하는 것과 NIO를 사용하는 것은 차이가 있음. 
 
 > [IO File]
 > -  여러 번의 new 메서드를 이용하여 객체를 생성, 순서에 맞게 I/O 객체를 종료 
@@ -89,7 +91,7 @@ public class SmallFileIO {
 ``` 
 
 > [NIO File class 이용]
-> - 파일 NIO의 Files를 이용하면 Reader와 Writer를 생성하기 위해 개발자가 직접 코딩할 필요 없이 File 클래스에 위임 -> 코드량 감소, 가독성 높아짐.
+> - 파일 NIO의 Files를 이용하면 Reader와 Writer를 생성하기 위해 개발자가 직접 코딩할 필요 없이 Files 클래스에 위임 -> 코드량 감소, 가독성 높아짐.
 ```java
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -132,9 +134,11 @@ public class BufferedFileIO {
 }
 ```
 - newBufferedReader(Path path) : path 경로에 있는 파일을 열어서 읽기 위한 BuffererdReader 객체 리턴
-- newBufferedWriter(Path path, OpenOption... options) : path 경로에 있는 파일을 열거나 새로 생성해서 데잍터를 저장하기 위한 BufferedWriter 객체를 리턴.
+- newBufferedWriter(Path path, OpenOption... options) : path 경로에 있는 파일을 열거나 새로 생성해서 데이터를 저장하기 위한 BufferedWriter 객체를 리턴.
 
 ### 7.6.4 스트림 I/O
+- Input/Output Stream은 파일 뿐만 아니라 네트워크 등 다양한 곳에서 응용할 수 있으며, 서블릿과 JSP로 프로그래밍할 때의 HTTP 통신 역시 WAS 내부에서 Input/Output Stream으로 구성.
+- Stream은 바이트 단위로 입출력을 함. (Reader/Writer는 문자단위)
 - 파일 NIO 에서도 입출력 스트림 제공. 
 ```java
 import java.io.BufferedInputStream;
@@ -162,9 +166,9 @@ public class StreamFileIO {
 		
 		// InputStream, OutputStream을 이용해서 파일 처리를 한다.
 		try (InputStream input = Files.newInputStream(sourcePath);
-				BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(input));   //BufferedInputStream binput = new BufferedInputStream(input);
 				OutputStream out = Files.newOutputStream(targetPath);
-				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out))) {
+				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out))) {  //BufferedOutputStream bout = new BufferedOutputStream(out);
 		    String line = null;
 
 		    // 파일에서 데이터를 읽어들인다. 한줄씩 읽어들이는 예제이다.
@@ -212,6 +216,7 @@ public class StreamFileIO {
 - newOutputStream(Path path, OpenOption... options) : Path 경로에 있는 파일을 열거나 새로 생성해서 데이터를 저장하기 위한 OutputStream 객체를 리턴한다. 
 
 ### 7.6.5 채널과 바이트버퍼
+- https://homoefficio.github.io/2016/08/06/Java-NIO%EB%8A%94-%EC%83%9D%EA%B0%81%EB%A7%8C%ED%81%BC-non-blocking-%ED%95%98%EC%A7%80-%EC%95%8A%EB%8B%A4/ 
 - 파일 NIO의 Files 클래스의 newByteChannel 메서드 : 채널 I/O 객체를 리턴
 - newByteChannel 메서드를 호출할 때는 반드시 OpenOption 클래스를 이용해서 파일을 열어야하며, 최소한 READ 옵션을 적용해야 파일에 저장되어 있는 데이터를 읽어들일 수 있음.
 - newByteChannel 메서드를 이용하면 더 빠른 파일 입출력을 위한 객체를 생성할 수 있으며, 별도의 버퍼링을 위해 객체를 선언하는 등의 작업이 불필요하여 소스코드가 간편해짐. 
@@ -262,9 +267,10 @@ public class ChannelFileIO {
 하나의 메서드로 읽기와 쓰기용 둘다 생성 가능
 - SeekableByteChannel :  현재 읽고 있는 위치를 내부적으로 관리하며 그 위치 정보를 변경해서 수정할 수 있음. ReadableByteChannel, WritableByteChannel의 하위 인터페이스로 Readable한 명세와 Writable한 명세를 하나의 인터페이스에 모두
 포함하고 있기 때문에 하나의 객체로 파일을 읽고 쓰는 작업이 모두 가능함. 
+- <img src = "https://user-images.githubusercontent.com/38370976/103632408-9857c400-4f87-11eb-9482-cd4d3450de4e.png" width="600px">
 
 ### 7.6.6 일반 파일과 임시 파일 생성
-
+- 파일의 내용 중 일부를 필터링 하거나 정렬하거나 여러개의 파일을 합치거나 할때 임시파일 사용.
 ```java
 import java.io.IOException;
 import java.nio.file.Files;
@@ -285,6 +291,8 @@ public class TemporaryFile {
 		}
 	}
 }
+//임시 디렉토리 : /var/folders/my/1wx1ydk53wdc_r_32f4tbnvm0000gn/T/java918660693808460039
+//임시 파일 : /var/folders/my/1wx1ydk53wdc_r_32f4tbnvm0000gn/T/java918660693808460039/5432434590937192091.tempdata
 ```
 - createTempDirectory(Path dir, String prefix, FileAttribute<?>... attrs) : 운영체제의 임시 디렉터리 하위에 디렉터리를 생성
 - createTempFile(Path dir, String prefix, String suffix, FileAttribute<?>... attrs) : 운영체제의 임시 디렉터리에 임시 파일을 생성. 
