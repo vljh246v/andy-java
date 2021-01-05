@@ -462,7 +462,7 @@ public class ListRootDirectory {
 ### 7.9.1 walkFileTree 메서드 
 - 파일 NIO 에서는 디렉터리의 트리 구조를 지원하기 위해서 FileVisitor 인터페이스 제공 
 - SimpleFileVisitor 클래스를 이용해 처리 
-<img src = "https://user-images.githubusercontent.com/38370976/103615367-d0520d80-4f6d-11eb-859b-c1ffccd46a5d.png" width="600px">
+<img src = "https://user-images.githubusercontent.com/38370976/103626957-465f7000-4f80-11eb-8ebd-17ec6e5b5e21.png" width="600px">
 
 > /maintree/subtree1/subtree2 디렉터리 구조에서 FileVisitor의 메서드 호출 순서
 > preVisitDirectory는 디렉터리에 접근하기 전에 호출되며 CONTINUE 값을 리턴받으면 디렉터리에 있는 파일과 서브디렉터리를 처리, 처리가 완료되면 최종적으로 postVisitDirectory 메서드 호
