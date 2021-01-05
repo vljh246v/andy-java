@@ -556,7 +556,7 @@ public class PrintAllFiles {
 4. walkFileTree(Path start, SEt<FileVisitOption> optins, int maxDepth, FileVisitor<? super Path> visitor): 위와 동일하며, 방문할 파일트리에 대한 옵션과 리의 깊이를 지정할 수 있음.
 
 > FileVisitResult 속성
-><img src = "https://user-images.githubusercontent.com/38370976/103619519-4312b700-4f75-11eb-859e-71e81f4ba817.png" width="600px">
+> - <img src = "https://user-images.githubusercontent.com/38370976/103619519-4312b700-4f75-11eb-859e-71e81f4ba817.png" width="600px">
 
 ## 7.10 디렉터리 변경 감지
 - 기존에는 많은 라이브러리나 프레임워크에서 파일의 변화나 디렉터리의 변경을 감지해주는 기능을 제공했으나 기능구현이 까다롭고 어렵다 
@@ -619,7 +619,7 @@ public class WatchingDirectory {
 ```
 
 > StandardWatchEventKids 클래스 제공 항목
-><img src = "https://user-images.githubusercontent.com/38370976/103619519-4312b700-4f75-11eb-859e-71e81f4ba817.png" width="600px">
+> - <img src = "https://user-images.githubusercontent.com/38370976/103619519-4312b700-4f75-11eb-859e-71e81f4ba817.png" width="600px">
 
 > 사용 예 
 - 애플리케이션 설정 파일 모니터링 : 설정파일을 변경하면 실시간으로 반영. ENTRY_MODIFY 이벤트를 사용하여 감지
