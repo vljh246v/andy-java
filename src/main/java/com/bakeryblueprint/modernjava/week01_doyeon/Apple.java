@@ -8,7 +8,11 @@ public class Apple {
     private String color;
     private int weight;
 
-    public Apple() {}
+    public Apple(String owner, String color, int weight) {
+        this.owner = owner;
+        this.color = color;
+        this.weight = weight;
+    }
 
     public String getOwner() {
         return owner;

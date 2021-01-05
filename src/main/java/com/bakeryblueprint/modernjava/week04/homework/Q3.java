@@ -1,5 +1,11 @@
 package com.bakeryblueprint.modernjava.week04.homework;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 public class Q3 {
@@ -23,9 +29,21 @@ public class Q3 {
   public static void asynchronousCallThreadName() {
     final Q3 q3 = new Q3();
     final long start = System.nanoTime();
+    final ExecutorService service = Executors.newFixedThreadPool(5);
+    final List<Future<String>> futureList = new ArrayList<>();
     for (int i = 0; i < 5; i++) {
-      // 비동기식으로 returnThreadName 을 호출하는 로직을 작성 하시오
+      final Future<String> submit = service.submit(q3::returnThreadName);
+      futureList.add(submit);
     }
+
+    futureList.forEach(it -> {
+      try {
+        System.out.printf("계산 결과 : %s\n", it.get());
+      } catch (final InterruptedException | ExecutionException e) {
+        e.printStackTrace();
+      }
+    });
+    service.shutdown();
     final long duration = (System.nanoTime() - start) / 1_000_000;
     System.out.println("Done in " + duration + "msecs");
   }
