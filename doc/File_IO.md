@@ -2,8 +2,8 @@
 
 ### 7.6.1 파일 열기 옵션
 - NIO에서는 파일을 읽고, 쓰기 위한 목적 등 다양한 목적을 위한 standardOpenOptions을 제공
-- <img src = "https://user-images.githubusercontent.com/38370976/103625653-9e957280-4f7e-11eb-8f68-fc96978851ce.png" width="400px">
-- <img src = "https://user-images.githubusercontent.com/38370976/103455813-a7463880-4d33-11eb-9b45-d4d10624abdd.png" width="400px">
+- <img src = "https://user-images.githubusercontent.com/38370976/103625653-9e957280-4f7e-11eb-8f68-fc96978851ce.png" width="500px">
+- <img src = "https://user-images.githubusercontent.com/38370976/103455813-a7463880-4d33-11eb-9b45-d4d10624abdd.png" width="500px">
 
 ### 7.6.2 File 클래스 이용
 - 파일의 크기가 작고 데이터를 쓰는 빈도가 빈번하지 않을 경우 사용
