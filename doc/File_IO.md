@@ -2,7 +2,7 @@
 
 ### 7.6.1 파일 열기 옵션
 - NIO에서는 파일을 읽고, 쓰기 위한 목적 등 다양한 목적을 위한 standardOpenOptions을 제공
-![image](https://user-images.githubusercontent.com/38370976/103455463-c5f70000-4d30-11eb-81be-96f6e80136e4.png)
+![image](https://user-images.githubusercontent.com/38370976/103455463-c5f70000-4d30-11eb-81be-96f6e80136e4.png = 500x)
 ![image](https://user-images.githubusercontent.com/38370976/103455813-a7463880-4d33-11eb-9b45-d4d10624abdd.png)
 
 ### 7.6.2 File 클래스 이용
