@@ -2,8 +2,8 @@
 
 ### 7.6.1 파일 열기 옵션
 - NIO에서는 파일을 읽고, 쓰기 위한 목적 등 다양한 목적을 위한 standardOpenOptions을 제공
-![image](https://user-images.githubusercontent.com/38370976/103455463-c5f70000-4d30-11eb-81be-96f6e80136e4.png)
-![image](https://user-images.githubusercontent.com/38370976/103455813-a7463880-4d33-11eb-9b45-d4d10624abdd.png)
+- <img src = "https://user-images.githubusercontent.com/38370976/103625653-9e957280-4f7e-11eb-8f68-fc96978851ce.png" width="400px">
+- <img src = "https://user-images.githubusercontent.com/38370976/103455813-a7463880-4d33-11eb-9b45-d4d10624abdd.png" width="400px">
 
 ### 7.6.2 File 클래스 이용
 - 파일의 크기가 작고 데이터를 쓰는 빈도가 빈번하지 않을 경우 사용
@@ -434,7 +434,7 @@ public class NewFileFilter {
 - newDirectoryStream(Path dir, String glob) : 주어진 경로에 포함된 파일이나 디렉터리 목록을 컬렉션 형태의 DirectoryStream 객체로 만들어 리턴한다. 두번째 글로빙 파라미터를 통해 목록을 필터링 할 수 있다.
 - newDirectoryStream(Path dir, DirectoryStream.Filter<? super Path> filter) : 주어진 경로에 포함된 파일이나 디렉터리 목록을 DirectoryStream 객체로 전달하되 DirectoryStream.Filter에 포함되어 있는 정보를 기반으로 필터링.
 
-![image](https://user-images.githubusercontent.com/38370976/103540488-1f039700-4edd-11eb-9945-8cf0d02264fd.png)
+- <img src = "https://user-images.githubusercontent.com/38370976/103540488-1f039700-4edd-11eb-9945-8cf0d02264fd.png" width="400px">
 
 ### 7.8.4 루트 디렉터리 
 ```java
@@ -462,7 +462,7 @@ public class ListRootDirectory {
 ### 7.9.1 walkFileTree 메서드 
 - 파일 NIO 에서는 디렉터리의 트리 구조를 지원하기 위해서 FileVisitor 인터페이스 제공 
 - SimpleFileVisitor 클래스를 이용해 처리 
-![image](https://user-images.githubusercontent.com/38370976/103615367-d0520d80-4f6d-11eb-859b-c1ffccd46a5d.png)
+<img src = "https://user-images.githubusercontent.com/38370976/103615367-d0520d80-4f6d-11eb-859b-c1ffccd46a5d.png" width="400px">
 
 > /maintree/subtree1/subtree2 디렉터리 구조에서 FileVisitor의 메서드 호출 순서
 > preVisitDirectory는 디렉터리에 접근하기 전에 호출되며 CONTINUE 값을 리턴받으면 디렉터리에 있는 파일과 서브디렉터리를 처리, 처리가 완료되면 최종적으로 postVisitDirectory 메서드 호
@@ -546,7 +546,7 @@ public class PrintAllFiles {
 4. walkFileTree(Path start, SEt<FileVisitOption> optins, int maxDepth, FileVisitor<? super Path> visitor): 위와 동일하며, 방문할 파일트리에 대한 옵션과 리의 깊이를 지정할 수 있음.
 
 > FileVisitResult 속성
-![image](https://user-images.githubusercontent.com/38370976/103619519-4312b700-4f75-11eb-859e-71e81f4ba817.png)
+><img src = "https://user-images.githubusercontent.com/38370976/103619519-4312b700-4f75-11eb-859e-71e81f4ba817.png" width="400px">
 
 ## 7.10 디렉터리 변경 감지
 - 기존에는 많은 라이브러리나 프레임워크에서 파일의 변화나 디렉터리의 변경을 감지해주는 기능을 제공했으나 기능구현이 까다롭고 어렵다 
@@ -609,7 +609,7 @@ public class WatchingDirectory {
 ```
 
 > StandardWatchEventKids 클래스 제공 항목
-![image](https://user-images.githubusercontent.com/38370976/103619519-4312b700-4f75-11eb-859e-71e81f4ba817.png)
+><img src = "https://user-images.githubusercontent.com/38370976/103619519-4312b700-4f75-11eb-859e-71e81f4ba817.png" width="400px">
 
 > 사용 예 
 - 애플리케이션 설정 파일 모니터링 : 설정파일을 변경하면 실시간으로 반영. ENTRY_MODIFY 이벤트를 사용하여 감지
