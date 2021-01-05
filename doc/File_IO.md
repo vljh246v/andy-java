@@ -216,7 +216,6 @@ public class StreamFileIO {
 - newOutputStream(Path path, OpenOption... options) : Path 경로에 있는 파일을 열거나 새로 생성해서 데이터를 저장하기 위한 OutputStream 객체를 리턴한다. 
 
 ### 7.6.5 채널과 바이트버퍼
-- https://homoefficio.github.io/2016/08/06/Java-NIO%EB%8A%94-%EC%83%9D%EA%B0%81%EB%A7%8C%ED%81%BC-non-blocking-%ED%95%98%EC%A7%80-%EC%95%8A%EB%8B%A4/ 
 - 파일 NIO의 Files 클래스의 newByteChannel 메서드 : 채널 I/O 객체를 리턴
 - newByteChannel 메서드를 호출할 때는 반드시 OpenOption 클래스를 이용해서 파일을 열어야하며, 최소한 READ 옵션을 적용해야 파일에 저장되어 있는 데이터를 읽어들일 수 있음.
 - newByteChannel 메서드를 이용하면 더 빠른 파일 입출력을 위한 객체를 생성할 수 있으며, 별도의 버퍼링을 위해 객체를 선언하는 등의 작업이 불필요하여 소스코드가 간편해짐. 
