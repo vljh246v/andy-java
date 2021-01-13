@@ -1,6 +1,6 @@
 # File 생성, 쓰기, 읽기
 ## 1. Stream I/O
-* \t으로 구분된 이름과 생년월일 정보가 있는 homework.txt 파일을 읽어와 생년월일 순서대로 이름과 생일을 출력하는 txt 파일을 생성하세요.
+* \t으로 구분된 이름과 생년월일 정보가 있는 homework.txt 파일을 읽어와 Stream을 이용하여, 생년월일 순서대로 이름과 생일을 출력하는 txt 파일을 생성하세요.
 * InputStream, OutputStream 사용하기
 * 예제 7.15 참고(page 272) 
 ```java
