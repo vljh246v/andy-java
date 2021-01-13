@@ -457,7 +457,8 @@ public class ListDirectory {
 
 ### 7.8.3 목록 필터링
 * 대용량의 소프트웨어를 개발하고 해당 소프트웨어가 많은 파일을 처리해야한다면 파일에 대한 핉터링 기능이 반드시 필요.
-*java 6 까지는 FilenameFilter 인터페이스를 사용하였지만 NIO에서는 newDirectoryStream 메서드를 이용하여 필터 가능. 
+    * java 6 까지는 FilenameFilter 인터페이스를 사용
+    * NIO에서는 newDirectoryStream 메서드를 이용하여 필터 가능 
 
 > [java.io]
 ```java
@@ -544,7 +545,9 @@ public class NewFileFilter {
     * 주어진 경로에 포함된 파일이나 디렉터리 목록을 컬렉션 형태의 DirectoryStream 객체로 만들어 리턴
     * 두번째 글로빙 파라미터를 통해 목록을 필터링 가능 
 * newDirectoryStream(Path dir, DirectoryStream.Filter<? super Path> filter) 
-    * 주어진 경로에 포함된 파일이나 디렉터리 목록을 DirectoryStream 객체로 전달하되 DirectoryStream.Filter에 포함되어 있는 정보를 기반으로 필터링.
+    * 주어진 경로에 포함된 파일이나 디렉터리 목록을 DirectoryStream 객체로 전달
+     * DirectoryStream.Filter에 포함되어 있는 정보를 기반으로 필터링.
+     * 재사용 가능, 핉터링 규칙 상세하게 정의 가능.
 
 ### 7.8.4 루트 디렉터리 
 ```java
@@ -571,11 +574,11 @@ public class ListRootDirectory {
 
 ### 7.9.1 walkFileTree 메서드 
 * 파일 NIO 에서는 디렉터리의 트리 구조를 지원하기 위해서 FileVisitor 인터페이스 제공 
-* SimpleFileVisitor 클래스를 이용해 처리 
 * <img src = "https://user-images.githubusercontent.com/38370976/103626957-465f7000-4f80-11eb-8ebd-17ec6e5b5e21.png" width="600px">
 
-> /maintree/subtree1/subtree2 디렉터리 구조에서 FileVisitor의 메서드 호출 순서
-> preVisitDirectory는 디렉터리에 접근하기 전에 호출되며 CONTINUE 값을 리턴받으면 디렉터리에 있는 파일과 서브디렉터리를 처리, 처리가 완료되면 최종적으로 postVisitDirectory 메서드 호출 
+> * /maintree/subtree1/subtree2 디렉터리 구조에서 FileVisitor의 메서드 호출 순서
+    * preVisitDirectory는 디렉터리에 접근하기 전에 호출되며 CONTINUE 값을 리턴받으면 디렉터리에 있는 파일과 서브디렉터리를 처리
+    * 처리가 완료되면 최종적으로 postVisitDirectory 메서드 호출 
 1. maintree를 위한 preVisitDirectory 호출
 2. subtree1을 위한 preVisitDirectory 호출
 3. subtree2을 위한 preVisitDirectory 호출 
@@ -649,13 +652,13 @@ public class PrintAllFiles {
 }
 ```
 
-> Files 클래스에 있는 walk 관련 메서드 298p 참고 
+#### Files 클래스에 있는 walk 관련 메서드 298p 참고 
 1. walk(Path start, FileVisitOption... options) : 파일 트리에 대한 처리를 할 수 있는 스트림 객체 리턴.
 2. walk(Path start, int maxDepth, FileVisitOption... options) : 위의 메서드와 동일하며 maxDepth 파라미터로 처리할 파일 트리의 깊이를 제한 
 3. walkFileTree(Path start, FileVisitor<? super Path> visitor): 특정 경로를 기준으로 파일 트리 작업을 호출하며, 트리에 있는 파일 혹은 디렉터리에 대한 처리 여부를 정의한 FileVisitor 인터페이스를 이용하여 처리 
 4. walkFileTree(Path start, SEt<FileVisitOption> optins, int maxDepth, FileVisitor<? super Path> visitor): 위와 동일하며, 방문할 파일트리에 대한 옵션과 리의 깊이를 지정할 수 있음.
 
-> FileVisitResult 속성
+#### FileVisitResult 속성
 * 파일 트리 작업 제어  
 * <img src = "https://user-images.githubusercontent.com/38370976/103619519-4312b700-4f75-11eb-859e-71e81f4ba817.png" width="600px">
 
@@ -663,7 +666,8 @@ public class PrintAllFiles {
 ## 7.10 디렉터리 변경 감지
 * 기존에는 많은 라이브러리나 프레임워크에서 파일의 변화나 디렉터리의 변경을 감지해주는 기능을 제공했으나 기능구현이 까다롭고 어렵다 
 * 파일 NIO 에서는 변경을 감지하기 위해 파일 Watch API를 제공. 
-    * 모니터링 하고자 하는 자원의 스레드를 생성하고 스레드 풀에 등록해서 관리하며, 변화가 생겼을 때 이벤트를 발생시켜 알려줌.
+    * 모니터링 하고자 하는 자원의 스레드를 생성하고 스레드 풀에 등록해서 관리
+    * 변화가 생겼을 때 이벤트를 발생시켜 알려줌.
 
 ```java
 import java.io.IOException;
@@ -680,11 +684,11 @@ public class WatchingDirectory {
 
 	public static void main(String[] args) throws IOException {
 		// 1. 모니터링을 하는 WatchService 객체를 생성
-        // 운영ㅊ제 전반에 걸쳐서 제공되는 서비스이기 때문에 Files나 Path로 부터 객체를 생성하지 않고 FileSystems에서  객체 사용 
+            // 운영제 전반에 걸쳐서 제공되는 서비스이기 때문에 Files나 Path로 부터 객체를 생성하지 않고 FileSystems에서  객체 사용 
 		WatchService watchService = FileSystems.getDefault().newWatchService();
 
 		// 2. 모니터링 대상 경로를 생성하고 WatchService에 등록한다.
-        // Watch API에는 Wathable 인터페이스를 구현한 클래스만 등록가능, Path는 Watchable 인터페이스 구현
+            // Watch API에는 Wathable 인터페이스를 구현한 클래스만 등록가능, Path는 Watchable 인터페이스 구현
 		Path logsDir = Paths.get("C:/temp/logs");
 		logsDir.register(watchService, 
                             StandardWatchEventKinds.ENTRY_CREATE, 
