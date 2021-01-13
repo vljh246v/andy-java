@@ -376,8 +376,12 @@ public class RandomAccessFileNew {
     FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(perms);
     Files.createDirectory(file, attr);  // 권한 속성 지정하는 것은 생략가능.
 ```
-- createDirectory : 특정한 디렉터리 하위에 하나의 디렉터리를 생성. path로 전달할 파라미터에 있는 디렉터리의 상위 디렉터리가 실제로 파일 시스템에 존재해야함. 없으면 NoSuchFileException 예외 발생 
-- createDirectories : 특정한 디렉터리 하위에 여러 단계의 디렉터리를 생성. 생성하고자 하는 디렉터리의 상위 디렉터리 존재 여부와 관계없이 디렉터리 생성 작업을 진행함. 디렉터리의 속성을 지정할 수 없음.
+* createDirectory : 특정한 디렉터리 하위에 하나의 디렉터리를 생성. 
+    * path로 전달할 파라미터에 있는 디렉터리의 상위 디렉터리가 실제로 파일 시스템에 존재해야함. 
+    * 없으면 NoSuchFileException 예외 발생 
+* createDirectories : 특정한 디렉터리 하위에 여러 단계의 디렉터리를 생성. 
+    * 생성하고자 하는 디렉터리의 상위 디렉터리 존재 여부와 관계없이 디렉터리 생성 작업을 진행함. 
+    * 디렉터리의 속성을 지정할 수 없음.
 
 > 디렉터리 생성 절차 
 1. 생성할 디렉터리의 경로 정보인 Path 객체를 생성
@@ -386,7 +390,7 @@ public class RandomAccessFileNew {
 4. Path 객체 정보를 기반으로 createDirectory 메서드를 이용해서 디렉터리 생성
 
 ### 7.8.2 디렉터리 목록 조회 
-- Files 클래스의 newDirectorySystem 메서드 제공 
+* Files 클래스의 newDirectorySystem 메서드 제공 
 
 > java.io
 ```java
@@ -448,12 +452,12 @@ public class ListDirectory {
 	}
 }
 ```
-- DirectoryStream는 Iterable 인터페이스의 하위 인터페이스이고, 제네릭으로 Path 정보를 사용하도록 하고있어 반복문을 이용해 결과값을 얻을 수 있음
-- Collection 인터페이스를 상속받지 않아서 스트림 API를 이용하여 람다 표현식을 적용할 수 없음.
+* DirectoryStream는 Iterable 인터페이스의 하위 인터페이스이고, 제네릭으로 Path 정보를 사용하도록 하고있어 반복문을 이용해 결과값을 얻을 수 있음
+* Collection 인터페이스를 상속받지 않아서 스트림 API를 이용하여 람다 표현식을 적용할 수 없음.
 
 ### 7.8.3 목록 필터링
-- 대용량의 소프트웨어를 개발하고 해당 소프트웨어가 많은 파일을 처리해야한다면 파일에 대한 핉터링 기능이 반드시 필요.
-- java 6 까지는 FilenameFilter 인터페이스를 사용하였지만 NIO에서는 newDirectoryStream 메서드를 이용하여 필터 가능. 
+* 대용량의 소프트웨어를 개발하고 해당 소프트웨어가 많은 파일을 처리해야한다면 파일에 대한 핉터링 기능이 반드시 필요.
+*java 6 까지는 FilenameFilter 인터페이스를 사용하였지만 NIO에서는 newDirectoryStream 메서드를 이용하여 필터 가능. 
 
 > [java.io]
 ```java
@@ -536,8 +540,11 @@ public class NewFileFilter {
 	}
 }
 ```
-- newDirectoryStream(Path dir, String glob) : 주어진 경로에 포함된 파일이나 디렉터리 목록을 컬렉션 형태의 DirectoryStream 객체로 만들어 리턴한다. 두번째 글로빙 파라미터를 통해 목록을 필터링 할 수 있다.
-- newDirectoryStream(Path dir, DirectoryStream.Filter<? super Path> filter) : 주어진 경로에 포함된 파일이나 디렉터리 목록을 DirectoryStream 객체로 전달하되 DirectoryStream.Filter에 포함되어 있는 정보를 기반으로 필터링.
+* newDirectoryStream(Path dir, String glob)  
+    * 주어진 경로에 포함된 파일이나 디렉터리 목록을 컬렉션 형태의 DirectoryStream 객체로 만들어 리턴
+    * 두번째 글로빙 파라미터를 통해 목록을 필터링 가능 
+* newDirectoryStream(Path dir, DirectoryStream.Filter<? super Path> filter) 
+    * 주어진 경로에 포함된 파일이나 디렉터리 목록을 DirectoryStream 객체로 전달하되 DirectoryStream.Filter에 포함되어 있는 정보를 기반으로 필터링.
 
 ### 7.8.4 루트 디렉터리 
 ```java
@@ -563,9 +570,9 @@ public class ListRootDirectory {
 - 디렉터리가 파일이나 디렉터리가 하나도 존재하지 없는 경우는 거의 없기 때문에 파일 트리를 이용해서 처리할 수 밖에 없음.
 
 ### 7.9.1 walkFileTree 메서드 
-- 파일 NIO 에서는 디렉터리의 트리 구조를 지원하기 위해서 FileVisitor 인터페이스 제공 
-- SimpleFileVisitor 클래스를 이용해 처리 
-<img src = "https://user-images.githubusercontent.com/38370976/103626957-465f7000-4f80-11eb-8ebd-17ec6e5b5e21.png" width="600px">
+* 파일 NIO 에서는 디렉터리의 트리 구조를 지원하기 위해서 FileVisitor 인터페이스 제공 
+* SimpleFileVisitor 클래스를 이용해 처리 
+* <img src = "https://user-images.githubusercontent.com/38370976/103626957-465f7000-4f80-11eb-8ebd-17ec6e5b5e21.png" width="600px">
 
 > /maintree/subtree1/subtree2 디렉터리 구조에서 FileVisitor의 메서드 호출 순서
 > preVisitDirectory는 디렉터리에 접근하기 전에 호출되며 CONTINUE 값을 리턴받으면 디렉터리에 있는 파일과 서브디렉터리를 처리, 처리가 완료되면 최종적으로 postVisitDirectory 메서드 호출 
@@ -649,13 +656,14 @@ public class PrintAllFiles {
 4. walkFileTree(Path start, SEt<FileVisitOption> optins, int maxDepth, FileVisitor<? super Path> visitor): 위와 동일하며, 방문할 파일트리에 대한 옵션과 리의 깊이를 지정할 수 있음.
 
 > FileVisitResult 속성
-- 파일 트리 작업 제어  
-<img src = "https://user-images.githubusercontent.com/38370976/103619519-4312b700-4f75-11eb-859e-71e81f4ba817.png" width="600px">
+* 파일 트리 작업 제어  
+* <img src = "https://user-images.githubusercontent.com/38370976/103619519-4312b700-4f75-11eb-859e-71e81f4ba817.png" width="600px">
 
 
 ## 7.10 디렉터리 변경 감지
-- 기존에는 많은 라이브러리나 프레임워크에서 파일의 변화나 디렉터리의 변경을 감지해주는 기능을 제공했으나 기능구현이 까다롭고 어렵다 
-- 파일 NIO 에서는 변경을 감지하기 위해 파일 Watch API를 제공. 모니터링 하고자 하는 자원의 스레드를 생성하고 스레드 풀에 등록해서 관리하며, 변화가 생겼을 때 이벤트를 발생시켜 알려줌.
+* 기존에는 많은 라이브러리나 프레임워크에서 파일의 변화나 디렉터리의 변경을 감지해주는 기능을 제공했으나 기능구현이 까다롭고 어렵다 
+* 파일 NIO 에서는 변경을 감지하기 위해 파일 Watch API를 제공. 
+    * 모니터링 하고자 하는 자원의 스레드를 생성하고 스레드 풀에 등록해서 관리하며, 변화가 생겼을 때 이벤트를 발생시켜 알려줌.
 
 ```java
 import java.io.IOException;
@@ -715,10 +723,10 @@ public class WatchingDirectory {
 ```
 
 > StandardWatchEventKids 클래스 제공 항목
-> - <img src = "https://user-images.githubusercontent.com/38370976/103619519-4312b700-4f75-11eb-859e-71e81f4ba817.png" width="600px">
+*  <img src = "https://user-images.githubusercontent.com/38370976/103619519-4312b700-4f75-11eb-859e-71e81f4ba817.png" width="600px">
 
 > 사용 예 
-- 애플리케이션 설정 파일 모니터링 : 설정파일을 변경하면 실시간으로 반영. ENTRY_MODIFY 이벤트를 사용하여 감지
-- 파일 에디터 : 열린 파일의 변경 여부를 실시간으로 감지하는 기능. ENTRY_MODIFY 이벤트 이용.
-- 파일 큐 : 특정 디렉터리에 새로운 파일이 생성되면 이를 모니터링 하고있다가 처리하는 방식. ENTRY_CREATE 이벤트 
+* 애플리케이션 설정 파일 모니터링 : 설정파일을 변경하면 실시간으로 반영. ENTRY_MODIFY 이벤트를 사용하여 감지
+* 파일 에디터 : 열린 파일의 변경 여부를 실시간으로 감지하는 기능. ENTRY_MODIFY 이벤트 이용.
+* 파일 큐 : 특정 디렉터리에 새로운 파일이 생성되면 이를 모니터링 하고있다가 처리하는 방식. ENTRY_CREATE 이벤트 
  
