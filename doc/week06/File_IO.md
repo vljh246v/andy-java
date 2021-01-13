@@ -652,6 +652,7 @@ public class PrintAllFiles {
 - 파일 트리 작업 제어  
 <img src = "https://user-images.githubusercontent.com/38370976/103619519-4312b700-4f75-11eb-859e-71e81f4ba817.png" width="600px">
 
+
 ## 7.10 디렉터리 변경 감지
 - 기존에는 많은 라이브러리나 프레임워크에서 파일의 변화나 디렉터리의 변경을 감지해주는 기능을 제공했으나 기능구현이 까다롭고 어렵다 
 - 파일 NIO 에서는 변경을 감지하기 위해 파일 Watch API를 제공. 모니터링 하고자 하는 자원의 스레드를 생성하고 스레드 풀에 등록해서 관리하며, 변화가 생겼을 때 이벤트를 발생시켜 알려줌.
@@ -714,7 +715,7 @@ public class WatchingDirectory {
 ```
 
 > StandardWatchEventKids 클래스 제공 항목
-><img src = "https://user-images.githubusercontent.com/38370976/103619519-4312b700-4f75-11eb-859e-71e81f4ba817.png" width="600px">
+> - <img src = "https://user-images.githubusercontent.com/38370976/103619519-4312b700-4f75-11eb-859e-71e81f4ba817.png" width="600px">
 
 > 사용 예 
 - 애플리케이션 설정 파일 모니터링 : 설정파일을 변경하면 실시간으로 반영. ENTRY_MODIFY 이벤트를 사용하여 감지
