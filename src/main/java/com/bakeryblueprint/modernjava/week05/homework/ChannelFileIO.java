@@ -30,7 +30,7 @@ public class ChannelFileIO {
 
         // 저장할 데이터를 작성
         Path normalizePath = sourcePath.toAbsolutePath().normalize();
-        String result = "파일이름: " + normalizePath.getFileName() + "\n상위 절대 경로: " + normalizePath;
+        String result = "파일이름: " + normalizePath.getFileName() + "\n절대 경로: " + normalizePath;
         byte data[] = result.getBytes();
         ByteBuffer bb = ByteBuffer.wrap(data);
 
