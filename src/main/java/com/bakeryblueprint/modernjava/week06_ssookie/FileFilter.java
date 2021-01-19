@@ -21,8 +21,11 @@ public class FileFilter {
             }
         };
 
+        // Lambda Expression
+        DirectoryStream.Filter<Path> filterLambda = (Path file) -> Files.isWritable(file);
+
         // DirectoryStream.Filter 기준으로 목록 조회
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, (Path file) -> Files.isWritable(file))){
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, filterLambda)){
             for (Path file : stream) {
                 System.out.println(file.getFileName());
             }
