@@ -3,7 +3,7 @@ package com.bakeryblueprint.modernjava.week08.jaehyun;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GenericBoundExample  {
+public class GenericBoundExample2 {
 
 
   public <T extends Number> void test1(List<T> list){
@@ -23,7 +23,7 @@ public class GenericBoundExample  {
     ee.add(1);
     ee.add(2);
     ee.add(3);
-    GenericBoundExample genericBoundExample = new GenericBoundExample();
+    GenericBoundExample2 genericBoundExample = new GenericBoundExample2();
     genericBoundExample.test1(ee);
     genericBoundExample.test2(ee);
   }

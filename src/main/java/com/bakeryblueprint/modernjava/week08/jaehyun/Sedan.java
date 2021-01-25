@@ -1,2 +1,5 @@
-package com.bakeryblueprint.modernjava.week08.jaehyun;public class Sedan {
+package com.bakeryblueprint.modernjava.week08.jaehyun;
+
+public class Sedan extends Vehicle{
+
 }
