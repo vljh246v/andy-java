@@ -368,15 +368,20 @@ public class RandomAccessFileNew {
 ## 7.8 디렉터리 처리
 
 ### 7.8.1 디렉터리 생성 
+- 디렉터리는 데이터를 저장하는 것이 아니라 파일을 그룹으로 묶고 트리구조로 분류하는 것이 목적.
 - 디렉터리 생성, 복사, 이동, 삭제할때도 파일과 동일하게 Files 클래스를 이용.
-- 디렉터리는 데이터를 저장하는 것이 아니라 파일을 그룹으로 묶고 트리구조로 분류하는 것이 목적이기 때문에 createDirectory 메서드 호출로 충분함.
+- createDirectory 메서드 호출로 디렉터리 생성.
 ```java
     Set<PosixFilePermission> perms = PosixFilePermissions.fromString("rwxr-x---");
     FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(perms);
-    Files.createDirectory(file, attr);
+    Files.createDirectory(file, attr);  // 권한 속성 지정하는 것은 생략가능.
 ```
-- createDirectory : 특정한 디렉터리 하위에 하나의 디렉터리를 생성. path로 전달할 파라미터에 있는 디렉터리의 상위 디렉터리가 실제로 파일 시스템에 존재해야함. 없으면 NoSuchFileException 예외 발생 
-- createDirectories : 특정한 디렉터리 하위에 여러 단계의 디렉터리를 생성. 생성하고자 하는 디렉터리의 상위 디렉터리 존재 여부와 관계없이 디렉터리 생성 작업을 진행함. 디렉터리의 속성을 지정할 수 없음.
+* createDirectory : 특정한 디렉터리 하위에 하나의 디렉터리를 생성. 
+    * path로 전달할 파라미터에 있는 디렉터리의 상위 디렉터리가 실제로 파일 시스템에 존재해야함. 
+    * 없으면 NoSuchFileException 예외 발생 
+* createDirectories : 특정한 디렉터리 하위에 여러 단계의 디렉터리를 생성. 
+    * 생성하고자 하는 디렉터리의 상위 디렉터리 존재 여부와 관계없이 디렉터리 생성 작업을 진행함. 
+    * 디렉터리의 속성을 지정할 수 없음.
 
 > 디렉터리 생성 절차 
 1. 생성할 디렉터리의 경로 정보인 Path 객체를 생성
@@ -385,7 +390,44 @@ public class RandomAccessFileNew {
 4. Path 객체 정보를 기반으로 createDirectory 메서드를 이용해서 디렉터리 생성
 
 ### 7.8.2 디렉터리 목록 조회 
-- Files 클래스의 newDirectorySystem 메서드 제공 
+* Files 클래스의 newDirectorySystem 메서드 제공 
+
+> java.io
+```java
+public class DirectoryFile {
+ 
+    public static void main(String[] args) {
+         
+        // Create a file object
+        File file = new File("c://Example//File");
+         
+        // 1. check if the file exists or not
+        boolean isExists = file.exists();
+         
+        if(!isExists) {
+            System.out.println("There is nothing.");
+        }
+         
+        // 2. check if the object is directory or not.
+        if(file.isDirectory()) {
+            File[] fileList = file.listFiles(); // list 메서드를 이용하여 이름 목록을 포함하고 있는 문자열 배열 리턴받아 처리.
+            for(File tFile : fileList) {
+                System.out.print(tFile.getName());             
+                if(tFile.isDirectory()) {
+                    System.out.print(" is ");
+                    System.out.println("a directory.");
+                } else {
+                    System.out.print(" is ");
+                    System.out.println("a file.");
+                }
+            }          
+        } else {
+            System.out.println("It is not a directory.");
+        }
+    }
+}
+```
+> java.nio
 ```java
 import java.io.IOException;
 import java.nio.file.DirectoryIteratorException;
@@ -410,12 +452,43 @@ public class ListDirectory {
 	}
 }
 ```
-- Iterable 인터페이스의 하위 인터페이스이고, 제네릭으로 Path 정보를 사용하도록 하고있어 반복문을 이용해 결과값을 얻을 수 있음
-- Collection 인터페이스를 상속받지 않아서 스트림 API를 이용하여 람다 표현식을 적용할 수 없음.
+* DirectoryStream는 Iterable 인터페이스의 하위 인터페이스이고, 제네릭으로 Path 정보를 사용하도록 하고있어 반복문을 이용해 결과값을 얻을 수 있음
+* Collection 인터페이스를 상속받지 않아서 스트림 API를 이용하여 람다 표현식을 적용할 수 없음.
 
 ### 7.8.3 목록 필터링
-- 대용량의 소프트웨어를 개발하고 해당 소프트웨어가 많은 파일을 처리해야한다면 파일에 대한 핉터링 기능이 반드시 필요.
-- java 6 까지는 FilenameFilter 인터페이스를 사용하였지만 NIO에서는 newDirectoryStream 메서드를 이용하여 필터 가능. 
+* 대용량의 소프트웨어를 개발하고 해당 소프트웨어가 많은 파일을 처리해야한다면 파일에 대한 핉터링 기능이 반드시 필요.
+    * java 6 까지는 FilenameFilter 인터페이스를 사용
+    * NIO에서는 newDirectoryStream 메서드를 이용하여 필터 가능 
+
+> [java.io]
+```java
+import java.io.File;
+import java.io.FilenameFilter;
+
+public class OldFileFilter {
+	public static void main(String[] args) {
+		File file = new File("C:/Windows");
+		
+		// 인터페이스를 구현하는 방식을 사용한다.
+//		String[] filteredFile = file.list(new FilenameFilter() {
+//			@Override
+//			public boolean accept(File dir, String name) {
+//				return name.toLowerCase().endsWith(".exe");
+//			}
+//		});
+		
+		// 람다 표현식을 이용한다.
+		String[] filteredFile = 
+				file.list((File dir, String name) -> name.toLowerCase().endsWith(".exe"));
+		
+		for(String fileName : filteredFile) {
+			System.out.println(fileName);
+		}
+	}
+}
+```
+
+> [java.nio]
 ```java
 import java.io.IOException;
 import java.nio.file.DirectoryIteratorException;
@@ -441,10 +514,40 @@ public class NewFileFilter {
 	}
 }
 ```
-- newDirectoryStream(Path dir, String glob) : 주어진 경로에 포함된 파일이나 디렉터리 목록을 컬렉션 형태의 DirectoryStream 객체로 만들어 리턴한다. 두번째 글로빙 파라미터를 통해 목록을 필터링 할 수 있다.
-- newDirectoryStream(Path dir, DirectoryStream.Filter<? super Path> filter) : 주어진 경로에 포함된 파일이나 디렉터리 목록을 DirectoryStream 객체로 전달하되 DirectoryStream.Filter에 포함되어 있는 정보를 기반으로 필터링.
+```java
+public class NewFileFilter {
+	public static void main(String[] args) {
+		Path dir = Paths.get("C:/Windows");
+    
+        // 디렉터리인 것만 핉터링.
+        // DirectoryStream.Filter 사용의 장점 : 재사용, 핉터링 규칙 상세하게 정의 가능.
+        DirectoryStream.Filter<Path> filter = new DirectoryStream.Filter<Path>() {
+                                public boolean accept(Path file) {
+                                    return (Files.isDirectory(file));
+                                }       
+                            };
 
-- <img src = "https://user-images.githubusercontent.com/38370976/103540488-1f039700-4edd-11eb-9945-8cf0d02264fd.png" width="600px">
+		
+		// DirectoryStream을 이용해서 조회한다.
+		// filter를 기준으로 목록을 조회한다.
+		try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, filter)) {
+		    for (Path file: stream) {
+		        System.out.println(file.getFileName());
+		    }
+		} 
+		catch (IOException | DirectoryIteratorException e) {
+		    e.printStackTrace();
+		}
+	}
+}
+```
+* newDirectoryStream(Path dir, String glob)  
+    * 주어진 경로에 포함된 파일이나 디렉터리 목록을 컬렉션 형태의 DirectoryStream 객체로 만들어 리턴
+    * 두번째 글로빙 파라미터를 통해 목록을 필터링 가능 
+* newDirectoryStream(Path dir, DirectoryStream.Filter<? super Path> filter) 
+    * 주어진 경로에 포함된 파일이나 디렉터리 목록을 DirectoryStream 객체로 전달
+     * DirectoryStream.Filter에 포함되어 있는 정보를 기반으로 필터링.
+     * 재사용 가능, 핉터링 규칙 상세하게 정의 가능.
 
 ### 7.8.4 루트 디렉터리 
 ```java
@@ -470,12 +573,12 @@ public class ListRootDirectory {
 - 디렉터리가 파일이나 디렉터리가 하나도 존재하지 없는 경우는 거의 없기 때문에 파일 트리를 이용해서 처리할 수 밖에 없음.
 
 ### 7.9.1 walkFileTree 메서드 
-- 파일 NIO 에서는 디렉터리의 트리 구조를 지원하기 위해서 FileVisitor 인터페이스 제공 
-- SimpleFileVisitor 클래스를 이용해 처리 
-<img src = "https://user-images.githubusercontent.com/38370976/103626957-465f7000-4f80-11eb-8ebd-17ec6e5b5e21.png" width="600px">
+* 파일 NIO 에서는 디렉터리의 트리 구조를 지원하기 위해서 FileVisitor 인터페이스 제공 
+* <img src = "https://user-images.githubusercontent.com/38370976/103626957-465f7000-4f80-11eb-8ebd-17ec6e5b5e21.png" width="600px">
 
-> /maintree/subtree1/subtree2 디렉터리 구조에서 FileVisitor의 메서드 호출 순서
-> preVisitDirectory는 디렉터리에 접근하기 전에 호출되며 CONTINUE 값을 리턴받으면 디렉터리에 있는 파일과 서브디렉터리를 처리, 처리가 완료되면 최종적으로 postVisitDirectory 메서드 호
+> * /maintree/subtree1/subtree2 디렉터리 구조에서 FileVisitor의 메서드 호출 순서
+    * preVisitDirectory는 디렉터리에 접근하기 전에 호출되며 CONTINUE 값을 리턴받으면 디렉터리에 있는 파일과 서브디렉터리를 처리
+    * 처리가 완료되면 최종적으로 postVisitDirectory 메서드 호출 
 1. maintree를 위한 preVisitDirectory 호출
 2. subtree1을 위한 preVisitDirectory 호출
 3. subtree2을 위한 preVisitDirectory 호출 
@@ -549,18 +652,22 @@ public class PrintAllFiles {
 }
 ```
 
-> Files 클래스에 있는 walk 관련 메서드 298p 참고 
+#### Files 클래스에 있는 walk 관련 메서드 298p 참고 
 1. walk(Path start, FileVisitOption... options) : 파일 트리에 대한 처리를 할 수 있는 스트림 객체 리턴.
 2. walk(Path start, int maxDepth, FileVisitOption... options) : 위의 메서드와 동일하며 maxDepth 파라미터로 처리할 파일 트리의 깊이를 제한 
 3. walkFileTree(Path start, FileVisitor<? super Path> visitor): 특정 경로를 기준으로 파일 트리 작업을 호출하며, 트리에 있는 파일 혹은 디렉터리에 대한 처리 여부를 정의한 FileVisitor 인터페이스를 이용하여 처리 
 4. walkFileTree(Path start, SEt<FileVisitOption> optins, int maxDepth, FileVisitor<? super Path> visitor): 위와 동일하며, 방문할 파일트리에 대한 옵션과 리의 깊이를 지정할 수 있음.
 
-> FileVisitResult 속성
-> - <img src = "https://user-images.githubusercontent.com/38370976/103619519-4312b700-4f75-11eb-859e-71e81f4ba817.png" width="600px">
+#### FileVisitResult 속성
+* 파일 트리 작업 제어  
+* <img src = "https://user-images.githubusercontent.com/38370976/103619519-4312b700-4f75-11eb-859e-71e81f4ba817.png" width="600px">
+
 
 ## 7.10 디렉터리 변경 감지
-- 기존에는 많은 라이브러리나 프레임워크에서 파일의 변화나 디렉터리의 변경을 감지해주는 기능을 제공했으나 기능구현이 까다롭고 어렵다 
-- 파일 NIO 에서는 변경을 감지하기 위해 파일 Watch API를 제공. 모니터링 하고자 하는 자원의 스레드를 생성하고 스레드 풀에 등록해서 관리하며, 변화가 생겼을 때 이벤트를 발생시켜 알려줌.
+* 기존에는 많은 라이브러리나 프레임워크에서 파일의 변화나 디렉터리의 변경을 감지해주는 기능을 제공했으나 기능구현이 까다롭고 어렵다 
+* 파일 NIO 에서는 변경을 감지하기 위해 파일 Watch API를 제공. 
+    * 모니터링 하고자 하는 자원의 스레드를 생성하고 스레드 풀에 등록해서 관리
+    * 변화가 생겼을 때 이벤트를 발생시켜 알려줌.
 
 ```java
 import java.io.IOException;
@@ -577,10 +684,11 @@ public class WatchingDirectory {
 
 	public static void main(String[] args) throws IOException {
 		// 1. 모니터링을 하는 WatchService 객체를 생성
+            // 운영제 전반에 걸쳐서 제공되는 서비스이기 때문에 Files나 Path로 부터 객체를 생성하지 않고 FileSystems에서  객체 사용 
 		WatchService watchService = FileSystems.getDefault().newWatchService();
 
 		// 2. 모니터링 대상 경로를 생성하고 WatchService에 등록한다.
-        // Watch API에는 Wathable 인터페이스를 구현한 클래스만 등록가능, Path는 Watchable 인터페이스 구현
+            // Watch API에는 Wathable 인터페이스를 구현한 클래스만 등록가능, Path는 Watchable 인터페이스 구현
 		Path logsDir = Paths.get("C:/temp/logs");
 		logsDir.register(watchService, 
                             StandardWatchEventKinds.ENTRY_CREATE, 
@@ -596,14 +704,14 @@ public class WatchingDirectory {
 			try {
 				// 5. 키 값 조회
 				WatchKey changeKey = watchService.take();
-				List<WatchEvent<?>> watchEvents = changeKey.pollEvents();   // 변경된 내용이 담겨서 리턴됨. 
+				List<WatchEvent<?>> watchEvents = changeKey.pollEvents();   // 변경된 내용이 담겨서 리턴됨. 변경없으면 안담김. 
 
 				// 6. 키에 해당하는 변경 목록 조회
                 // 변경된 경로 정보인 Path 객체가 담겨있음. 
 				for (WatchEvent<?> watchEvent : watchEvents) {
 					WatchEvent<Path> pathEvent = (WatchEvent<Path>) watchEvent;
 					Path path = pathEvent.context();
-					WatchEvent.Kind<Path> eventKind = pathEvent.kind();
+					WatchEvent.Kind<Path> eventKind = pathEvent.kind();     //생성, 삭제, 변경 중에서 어떤 종류 이벤트인지 확인.
 					System.out.println(eventKind + " for path: " + path);
 				}
 				
@@ -619,10 +727,10 @@ public class WatchingDirectory {
 ```
 
 > StandardWatchEventKids 클래스 제공 항목
-> - <img src = "https://user-images.githubusercontent.com/38370976/103619519-4312b700-4f75-11eb-859e-71e81f4ba817.png" width="600px">
+*  <img src = "https://user-images.githubusercontent.com/38370976/103619519-4312b700-4f75-11eb-859e-71e81f4ba817.png" width="600px">
 
 > 사용 예 
-- 애플리케이션 설정 파일 모니터링 : 설정파일을 변경하면 실시간으로 반영. ENTRY_MODIFY 이벤트를 사용하여 감지
-- 파일 에디터 : 열린 파일의 변경 여부를 실시간으로 감지하는 기능. ENTRY_MODIFY 이벤트 이용.
-- 파일 큐 : 특정 디렉터리에 새로운 파일이 생성되면 이를 모니터링 하고있다가 처리하는 방식. ENTRY_CREATE 이벤트 
+* 애플리케이션 설정 파일 모니터링 : 설정파일을 변경하면 실시간으로 반영. ENTRY_MODIFY 이벤트를 사용하여 감지
+* 파일 에디터 : 열린 파일의 변경 여부를 실시간으로 감지하는 기능. ENTRY_MODIFY 이벤트 이용.
+* 파일 큐 : 특정 디렉터리에 새로운 파일이 생성되면 이를 모니터링 하고있다가 처리하는 방식. ENTRY_CREATE 이벤트 
  
