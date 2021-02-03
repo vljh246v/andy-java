@@ -1,6 +1,6 @@
 # 1. 제네릭 컬렉션을 만드시오
 
-# 정답 예제
+# 기준 코드
 
 ```java
     public class CustomList {
